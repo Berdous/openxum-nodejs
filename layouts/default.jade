@@ -22,6 +22,7 @@ html
         div.navbar-collapse.my-navbar-collapse.collapse
           ul.nav.navbar-nav
             li: a(href='/') #{__("Home")}
+            li: a(href='/chat') #{__("Chat")}
             li: a(href='/games/') #{__("Games")}
             if user && user.username
               li: a(href='/tournaments/') #{__("Tournaments")}

@@ -17,7 +17,7 @@ var config = require('./config'),
     moment= require('moment');
 
 //create express app
-var app = express();
+var app = require('express')();
 
 //keep reference to config
 app.config = config;
@@ -116,6 +116,56 @@ wsServer.server.on('request', function (request) {
     wsServer.processRequest(request);
 });
 
+// Variables globales
+// Ces variables resteront durant toute la vie du seveur et sont communes pour chaque client (node server.js)
+// Liste des messages de la forme { pseudo : 'Mon pseudo', message : 'Mon message' }
+
+
+var http    =   require('http').Server(app);
+var fs      =   require('fs');
+
+// Création du serveur
+/*
+var ap = http.createServer(function (req, res) {
+    // On lit notre fichier tchat.html
+   fs.readFile('./tchat.html', 'utf-8', function(error, content) {
+        res.writeHead(200, {'Content-Type' : 'text/html'});
+        res.end(content);
+    });
+});
+
+*/
+
+var messages = [];
+
+//// SOCKET.IO ////
+
+var io      =   require('socket.io')(http);
+
+// Socket.IO écoute maintenant notre application !
+//io = io.listen(ap);
+
+// Quand une personne se connecte au serveur
+io.on('connection', function (socket) {
+    // On donne la liste des messages (événement créé du côté client)
+    socket.emit('recupererMessages', messages);
+    // Quand on reçoit un nouveau message
+    socket.on('nouveauMessage', function (mess) {
+        // On l'ajoute au tableau (variable globale commune à tous les clients connectés au serveur)
+        messages.push(mess);
+        // On envoie à tout les clients connectés (sauf celui qui a appelé l'événement) le nouveau message
+        socket.broadcast.emit('recupererNouveauMessage', mess);
+    });
+});
+
+///////////////////
+
+// Notre application écoute sur le port 8080
+http.listen(1337, function () {
+});
+console.log('Live Chat App running at http://localhost:1337/');
+
+
 //listen up
 /*if (cluster.isMaster) {
     var cpuCount = require('os').cpus().length;
@@ -124,7 +174,7 @@ wsServer.server.on('request', function (request) {
         cluster.fork();
     }
 } else { */
-    app.server.listen(app.config.port, function () {
+    http.listen(app.config.port, function () {
     });
 //}
 
