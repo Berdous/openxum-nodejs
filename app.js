@@ -136,6 +136,8 @@ var ap = http.createServer(function (req, res) {
 
 */
 
+
+
 var messages = [];
 
 //// SOCKET.IO ////
@@ -160,7 +162,7 @@ io.on('connection', function (socket) {
 
 ///////////////////
 
-// Notre application écoute sur le port 8080
+// Notre application écoute sur le port 1337
 http.listen(1337, function () {
 });
 console.log('Live Chat App running at http://localhost:1337/');
