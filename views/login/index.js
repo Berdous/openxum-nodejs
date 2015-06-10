@@ -1,5 +1,5 @@
 'use strict';
-
+//req.app.db.Connected.insert({name : });
 var getReturnUrl = function(req) {
   var returnUrl = req.user.defaultReturnUrl();
   if (req.session.returnUrl) {
