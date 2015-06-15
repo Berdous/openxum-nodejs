@@ -1,0 +1,97 @@
+doctype html
+html
+  head
+    block head
+      title #{title}
+    link(rel='stylesheet', href='/layouts/style.css?#{cacheBreaker}')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='/css/flags32.css?#{cacheBreaker}')
+    script(type='text/javascript', src='/socket.io/socket.io.js')
+    link(rel='stylesheet', href='/layouts/core.min.css?#{cacheBreaker}')
+    block neck
+  body
+    script(src='/layouts/core.min.js?#{cacheBreaker}')
+    div.navbar.navbar-default.navbar-fixed-top
+      div.container
+        div.navbar-header
+          a.navbar-brand(href='/')
+            img.navbar-logo(src='/media/logo-symbol-64x64.png')
+            span.navbar-brand-label #{projectName}
+          button.navbar-toggle.collapsed(data-toggle='collapse', data-target='.my-navbar-collapse')
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+        div.navbar-collapse.my-navbar-collapse.collapse
+          ul.nav.navbar-nav
+            li: a(href='/') #{__("Home")}
+            li: a(href='/games/') #{__("Games")}
+            if user && user.username
+              li: a(href='/tournaments/') #{__("Tournaments")}
+              li: a(href='/players/') #{__("Players")}
+            li: a(href='/ranking/') #{__("Ranking")}
+            if user && user.username
+              li: a(href='/mygames/') #{__("My offline games")}
+            li: a(href='/faq/') #{__("FAQ")}
+              li: a(href='/account/') #{__("My profile")}
+          ul.nav.navbar-nav.navbar-right
+            li.dropdown
+              a.dropdown-toggle(href="#",data-toggle="dropdown") #{__("Language")}
+                span.caret
+              ul.dropdown-menu(role="menu")
+                li.f32
+                  a(href="/language/?lg=en")
+                    span(class="flag us", style="vertical-align: middle")
+                    | &nbsp; English
+                  a(href="/language/?lg=fr")
+                    span(class="flag fr", style="vertical-align: middle")
+                    | &nbsp; Français
+            if user && user.username
+              li: a(href='/logout/')
+                i.fa.fa-user
+                |  #{__("Logout")} #{user.username}
+            else
+              li: a(href='/login/')
+                i.fa.fa-user
+                |  #{__("Sign In")}
+
+
+
+
+    <div class='titre'>Chat OpenXum</div>
+    #tchat
+    form(onsubmit='return (envoiMessage());')
+
+      input(type='text' id='message' required value="" pattern="^[a-zA-Z0-9\?\!\,\+\*\-\.\#\]+$")
+      input(type='submit'  value='Envoyer' id = 'submit')
+
+
+
+
+    script(type='text/javascript').
+      var pseudo = '#{user.username}';
+      var socket = io.connect();
+      socket.on('recupererMessages', function (messages) {
+      var html = '';
+      for (var i = 0; i < messages.length; i++)
+      html += '<div class="line"><b>'+messages[i].pseudo+'</b> : '+messages[i].message+'</div>';
+      document.getElementById('tchat').innerHTML = html;
+      });
+
+
+      socket.on('recupererNouveauMessage', function (message) {
+      document.getElementById('tchat').innerHTML += '<div class="bubble" style="" ><b>'+message.pseudo+'</b> : '+message.message+'</div>';
+
+      });
+
+      function envoiMessage(mess) {
+
+      var message = document.getElementById('message').value;
+
+      socket.emit('nouveauMessage', { 'pseudo' : pseudo, 'message' : message });
+
+      document.getElementById('tchat').innerHTML += '<div class="bubblea"    style=""><b>'+pseudo+'</b> : '+message+'</div>';
+
+      document.getElementById('message').value = '';
+
+      return false;
+      }
