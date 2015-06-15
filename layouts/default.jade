@@ -5,6 +5,7 @@ html
       title #{title}
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(rel='stylesheet', href='/css/flags32.css?#{cacheBreaker}')
+    script(type='text/javascript', src='/socket.io/socket.io.js')
     link(rel='stylesheet', href='/layouts/core.min.css?#{cacheBreaker}')
     block neck
   body
@@ -22,7 +23,8 @@ html
         div.navbar-collapse.my-navbar-collapse.collapse
           ul.nav.navbar-nav
             li: a(href='/') #{__("Home")}
-            li: a(href='/chat') #{__("Chat")}
+            if user && user.username
+                          li: a(href='/chat') #{__("Chat")}
             li: a(href='/games/') #{__("Games")}
             if user && user.username
               li: a(href='/tournaments/') #{__("Tournaments")}
@@ -55,6 +57,26 @@ html
               li: a(href='/login/')
                 i.fa.fa-user
                 |  #{__("Sign In")}
+
+
+                script(type='text/javascript').
+                      var pseudo = '#{user.username}';
+                      var socket = io.connect();
+                      socket.on('recupererMessages', function (messages) {
+                      var html = '';
+
+                       document.getElementById().innerHTML += '<div  ><b>'+NEW MSG+'</b></div>';
+
+                      });
+
+
+
+
+
+
+
+
+
 
     div.page
       div.container#main
