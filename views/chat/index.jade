@@ -105,7 +105,7 @@ html
 
       socket.emit('nouveauMessage', { 'pseudo' : pseudo, 'message' : message, 'date' : date });
 
-      document.getElementById('tchat').innerHTML += '<div class="bubblea"    style=""><b>'+pseudo+'</b> : '+message+date+'</div>';
+      document.getElementById('tchat').innerHTML += '<div class="bubblea"    style=""><b>'+pseudo+'</b> : '+message+date+'</div>'; 
 
       document.getElementById('message').value = '';
 
