@@ -13,19 +13,8 @@ var getReturnUrl = function(req) {
 exports.init = function(req, res){
     if (req.isAuthenticated()) {
 
-
-
-
-
-
-
-
-
-
-
-
         // trouver les utilisateurs connectés
-        req.app.db.models.User.find({ 'isActive': 'yes' }, function (err, user) {
+        req.app.db.models.User.find({ 'username': { $nin : [req.user.username,'root'] } }, function (err, user) {
             if (err) {
                 //return workflow.emit('exception', err);
             }

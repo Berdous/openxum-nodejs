@@ -57,12 +57,25 @@ html
 
 
 
-    <div class='titre'>Chat OpenXum</div>
+    <div class='titre'></div>
     #tchat
     form(onsubmit='return (envoiMessage());')
 
-      input(type='text' id='message' required value="" pattern="^[a-zA-Z0-9\?\!\,\+\*\-\.\#\]+$")
+      input(type='text' id='message' placeholder= "saisissez votre message" required value="" pattern="^[a-zA-Z0-9\?\!\,\+\*\-\.\# ]+$")
       input(type='submit'  value='Envoyer' id = 'submit')
+
+
+
+
+
+   #onglet Liste Joueurs
+  #list
+    each val in userActive
+     #joueur  #{val.username}
+
+
+
+
 
 
 
@@ -70,16 +83,19 @@ html
     script(type='text/javascript').
       var pseudo = '#{user.username}';
       var socket = io.connect();
+      ladate=new Date();
       socket.on('recupererMessages', function (messages) {
+
       var html = '';
       for (var i = 0; i < messages.length; i++)
       html += '<div class="line"><b>'+messages[i].pseudo+'</b> : '+messages[i].message+'</div>';
       document.getElementById('tchat').innerHTML = html;
       });
 
+      date = ladate.getHours()+":"+ladate.getMinutes()+"  "+ladate.getDate()+"/"+(ladate.getMonth()+1)+"/"+ladate.getFullYear();
 
       socket.on('recupererNouveauMessage', function (message) {
-      document.getElementById('tchat').innerHTML += '<div class="bubble" style="" ><b>'+message.pseudo+'</b> : '+message.message+'</div>';
+      document.getElementById('tchat').innerHTML += date+'<div class="bubble" style="" ><b>'+message.pseudo+'</b> : '+message.message+'</div>';
 
       });
 
@@ -87,9 +103,9 @@ html
 
       var message = document.getElementById('message').value;
 
-      socket.emit('nouveauMessage', { 'pseudo' : pseudo, 'message' : message });
+      socket.emit('nouveauMessage', { 'pseudo' : pseudo, 'message' : message, 'date' : date });
 
-      document.getElementById('tchat').innerHTML += '<div class="bubblea"    style=""><b>'+pseudo+'</b> : '+message+'</div>';
+      document.getElementById('tchat').innerHTML += '<div class="bubblea"    style=""><b>'+pseudo+'</b> : '+message+date+'</div>';
 
       document.getElementById('message').value = '';
 
