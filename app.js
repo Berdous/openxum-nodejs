@@ -124,19 +124,6 @@ wsServer.server.on('request', function (request) {
 var http    =   require('http').Server(app);
 var fs      =   require('fs');
 
-// Création du serveur
-/*
-var ap = http.createServer(function (req, res) {
-    // On lit notre fichier tchat.html
-   fs.readFile('./tchat.html', 'utf-8', function(error, content) {
-        res.writeHead(200, {'Content-Type' : 'text/html'});
-        res.end(content);
-    });
-});
-
-*/
-
-
 
 var messages = [];
 
@@ -162,10 +149,10 @@ io.on('connection', function (socket) {
 
 ///////////////////
 
-// Notre application écoute sur le port 1337
-http.listen(1337, function () {
+// Notre application écoute sur le port 3000
+http.listen(3000, function () {
 });
-console.log('Live Chat App running at http://localhost:1337/');
+console.log('Live Chat App running at http://localhost:3000/');
 
 
 //listen up
