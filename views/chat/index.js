@@ -29,7 +29,6 @@ exports.init = function(req, res){
         });
 
 
-
     }
     else {
         res.render('login/index', {

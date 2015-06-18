@@ -131,9 +131,6 @@ var messages = [];
 
 var io      =   require('socket.io')(http);
 
-// Socket.IO écoute maintenant notre application !
-//io = io.listen(ap);
-
 // Quand une personne se connecte au serveur
 io.on('connection', function (socket) {
     // On donne la liste des messages (événement créé du côté client)
